@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>My Leaflet Lab</title>
+
+		<!--put your external stylesheet links here-->
+        <!--integrity, line 11, is in the leaflet tutorial-->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+        <!-- Make sure you put this AFTER Leaflet's CSS -->
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+        integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+
+		<link rel="stylesheet" href="css/style.css">
+		<!--[if IE<9]>
+			<link rel="stylesheet" href="css/style.ie.css">
+		<![endif]-->
+        <!--creating map height I think?-->
+        <style>#mapid { height: 580px; }</style>
+        
+        
+	</head>
+
+<body>
+    <!-- to style our map-->
+    <div id="mapid"></div>
+<!--put your initial page content here-->
+<!--you can also use this space for internal scripts or stylesheets;
+		place these within <script> or <style> tags-->
+    <script>var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+    
+<!-- trying to quote access MapBox token-->
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+	maxZoom: 18,
+	id: 'mapbox.streets',
+	accessToken: 'pk.eyJ1IjoibGViYXJkIiwiYSI6ImNqbHNvbGxhNTAxemgzdHBlMXVrdDdob28ifQ.wHaKkSAhiicvWC4BVcwGng'
+    }).addTo(mymap);
+    var marker = L.marker([51.5, -0.09]).addTo(mymap);
+<!-- adding blue marker in line 42ish-->
+    var circle = L.circle([51.508, -0.11], {
+	color: 'red',
+	fillColor: '#f03',
+	fillOpacity: 0.5,
+	radius: 500
+}).addTo(mymap);
+        
+    var polygon = L.polygon([
+	[51.509, -0.08],
+	[51.503, -0.06],
+	[51.51, -0.047],
+]).addTo(mymap);
+        
+    marker.bindPopup("<b> Hey There!</b><br>I am a marker. Click the other shapes to find out what they are!").openPopup();
+    circle.bindPopup("I am a radius.");
+    polygon.bindPopup("I am a triangle.");
+    
+    var popup = L.popup()
+	.setLatLng([51.52, -0.09])
+	.setContent("LOOK AT ME, I am a standalone popup that you'll only see once.")
+	.openOn(mymap);
+        
+    var popup = L.popup();
+
+function onMapClick(e) {
+	popup
+		.setLatLng(e.latlng)
+		.setContent("You clicked the map at " + e.latlng.toString())
+		.openOn(mymap);
+}
+
+mymap.on('click', onMapClick);
+    
+    var geojsonFeature = {
+	"type": "Feature",
+	"properties": {
+		"name": "Coors Field",
+		"amenity": "Baseball Stadium",
+		"popupContent": "This is where the Rockies play!"
+	},
+	"geometry": {
+		"type": "Point",
+		"coordinates": [-104.99404, 39.75621]
+	}
+};
+    L.geoJSON(geojsonFeature).addTo(map);
+        
+    </script>
+<!-- adding circular radial marker above-->
+<!--put your external script links here-->
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
